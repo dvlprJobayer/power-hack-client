@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQuery } from 'react-query';
 import './App.css';
 import AddAndEditModal from './components/AddAndEditModal/AddAndEditModal';
 import BillingBody from './components/BillingBody/BillingBody';
@@ -20,17 +21,25 @@ const customStyles = {
 function App() {
     const [modalIsOpen, setIsOpen] = useState(false);
 
+    const { data: billingList, isLoading, refetch } = useQuery('billingList', () => fetch('http://localhost:5000/billing-list').then(res =>
+        res.json()));
+
     return (
         <>
             <Header />
             <div className="container mx-auto mt-6">
-                <BillingHeader />
-                <BillingBody />
+                <BillingHeader setIsOpen={setIsOpen} />
+                <BillingBody
+                    billingList={billingList}
+                    isLoading={isLoading}
+                />
             </div>
             <AddAndEditModal
                 modalIsOpen={modalIsOpen}
                 setIsOpen={setIsOpen}
                 customStyles={customStyles}
+                billingList={billingList}
+                refetch={refetch}
             />
         </>
     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { FaTimesCircle } from 'react-icons/fa';
+import { useForm } from 'react-hook-form';
 
 
 Modal.setAppElement('#root');
@@ -10,6 +11,25 @@ const AddAndEditModal = ({ modalIsOpen, setIsOpen, customStyles }) => {
         setIsOpen(false);
     }
 
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const onSubmit = data => {
+        const bill = {
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            amount: data.amount
+        }
+        fetch('http://localhost:5000/add-billing', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(bill)
+        }).then(res => res.json()).then(data => console.log(data)).catch(err => {
+            console.error(err.message)
+        })
+    }
+
     return (
         <Modal
             isOpen={modalIsOpen}
@@ -17,16 +37,63 @@ const AddAndEditModal = ({ modalIsOpen, setIsOpen, customStyles }) => {
             style={customStyles}
             contentLabel="Add Contact Modal"
         >
-            <div className="close-btn-container">
-                <FaTimesCircle onClick={closeModal} className="close-btn" />
+            <div className="flex justify-end">
+                <FaTimesCircle onClick={closeModal} className="cursor-pointer text-xl font-semibold" />
             </div>
-            <div className="form-container">
-                <h2>Add Contact</h2>
-                <form>
-                    <input name='firstName' type="text" placeholder='First Name' />
-                    <input name='lastName' type="text" placeholder='Last Name' />
-                    <input name='phone' type="text" placeholder='Phone Number' />
-                    <input className='submit-btn' type="submit" value="Add Contact" />
+            <div className="w-96">
+                <h2 className='text-xl mb-2 font-semibold'>Add Contact</h2>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <input type="text" placeholder="Full Name" className="input input-bordered w-full" {...register("name", {
+                        required: {
+                            value: true,
+                            message: 'Name is Required'
+                        }
+                    })} />
+                    {errors.name?.type === 'required' && <p className='text-red-500 mt-2'>{errors.name.message}</p>}
+                    <div className="mb-4"></div>
+
+                    <input type="email" placeholder="Email" className="input input-bordered w-full" {...register("email", {
+                        required: {
+                            value: true,
+                            message: 'Email is Required'
+                        },
+                        pattern: {
+                            value: /\S+@\S+\.\S+/,
+                            message: 'Invalid Email'
+                        }
+                    })} />
+                    {errors.email?.type === 'required' && <p className='text-red-500 mt-1'>{errors.email.message}</p>}
+                    {errors.email?.type === 'pattern' && <p className='text-red-500 mt-1'>{errors.email.message}</p>}
+                    <div className="mb-4"></div>
+
+                    <input type="number" placeholder="Phone Number" className="input input-bordered w-full" {...register("phone", {
+                        required: {
+                            value: true,
+                            message: 'Phone Number is Required'
+                        },
+                        minLength: {
+                            value: 11,
+                            message: 'Number should be 11 character'
+                        },
+                        maxLength: {
+                            value: 11,
+                            message: 'Number should be 11 character'
+                        }
+                    })} />
+                    {errors.phone?.type === 'required' && <p className='text-red-500 mt-1'>{errors.phone.message}</p>}
+                    {errors.phone?.type === 'minLength' && <p className='text-red-500 mt-1'>{errors.phone.message}</p>}
+                    {errors.phone?.type === 'maxLength' && <p className='text-red-500 mt-1'>{errors.phone.message}</p>}
+                    <div className="mb-4"></div>
+
+                    <input type="number" placeholder="Paid Amount" className="input input-bordered w-full" {...register("amount", {
+                        required: {
+                            value: true,
+                            message: 'Paid Amount is Required'
+                        }
+                    })} />
+                    {errors.amount?.type === 'required' && <p className='text-red-500 mt-1'>{errors.amount.message}</p>}
+                    <div className="mb-4"></div>
+                    <input type="submit" value="Add Bill" className="btn btn-secondary w-full" />
                 </form>
             </div>
         </Modal>

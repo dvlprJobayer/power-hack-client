@@ -2,10 +2,12 @@
     background-color: #b0aead;
     border: 1px solid #000;
     border-radius: 0 !important;
+    position: static !important;
 }
 
 .table td {
     background-color: #bcbcbc;
     border: 1px solid #000;
     border-radius: 0 !important;
+    font-weight: 500;
 }
