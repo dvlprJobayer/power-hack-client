@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BillingHeader = ({ setIsOpen, setSelectedBill }) => {
+const BillingHeader = ({ setIsOpen, setSelectedBill, setSearchInput }) => {
     const addModal = () => {
         setSelectedBill(null);
         setIsOpen(true);
@@ -10,7 +10,7 @@ const BillingHeader = ({ setIsOpen, setSelectedBill }) => {
         <div className='bg-primary flex justify-between px-4 py-2 mb-4'>
             <div className='flex items-center'>
                 <h2 className='text-lg font-semibold'>Billings</h2>
-                <input className='bg-primary border border-black placeholder:text-black ml-3 py-1 px-2 w-96' type="text" placeholder='Search...' />
+                <input onChange={e => setSearchInput(e.target.value)} className='bg-primary border border-black placeholder:text-black ml-3 py-1 px-2 w-96' type="text" placeholder='Search...' />
             </div>
             <button onClick={addModal} className='btn btn-secondary text-white'>Add New Bill</button>
         </div>

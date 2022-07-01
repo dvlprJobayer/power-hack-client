@@ -1,6 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import AddAndEditModal from '../AddAndEditModal/AddAndEditModal';
 import BillingBody from '../BillingBody/BillingBody';
 import BillingHeader from '../BillingHeader/BillingHeader';
@@ -19,33 +21,66 @@ const customStyles = {
     },
 };
 
-const Main = ({ setAllBillLength, refetchAll }) => {
+const Main = ({ setAllBillLength, refetchAll, token, allBill }) => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [modalIsOpenTwo, setIsOpenTwo] = useState(false);
     const [billingList, setBillingList] = useState([]);
     const [selectedBill, setSelectedBill] = useState(null);
-    const [page, setPage] = useState(0)
+    const [searchInput, setSearchInput] = useState('');
+    const [page, setPage] = useState(0);
+
+    const navigate = useNavigate();
 
     const handlePageClick = page => {
         setPage(page.selected);
     }
 
-    const { data, isLoading, refetch } = useQuery(['billingList', page], () => fetch(`http://localhost:5000/billing-list?page=${page}&size=10`).then(res =>
-        res.json()));
+    const { data, isLoading, refetch, error } = useQuery(['billingList', page, token], () => axios(`http://localhost:5000/billing-list?page=${page}&size=10`, {
+        headers: {
+            authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+    }));
+
+    useEffect(() => {
+        if (error?.response?.status === 403 || error?.response?.status === 401) {
+            navigate('/login');
+        }
+    }, [error, navigate]);
 
     const { data: pageCount, refetch: refetchTwo } = useQuery('pageCount', () => fetch('http://localhost:5000/page-count').then(res =>
         res.json()));
 
     useEffect(() => {
-        if (data) {
-            setBillingList(data);
+        if (data?.data) {
+            setBillingList(data.data);
         }
     }, [data]);
+
+    useEffect(() => {
+        if (searchInput !== '') {
+            const filteredBill = allBill?.data?.filter(oneBill => {
+                if (oneBill.name.toLowerCase().includes(searchInput.toLowerCase())) {
+                    return oneBill
+                } else if (oneBill.email.toLowerCase().includes(searchInput.toLowerCase())) {
+                    return oneBill
+                } else if (oneBill.phone.includes(searchInput)) {
+                    return oneBill
+                }
+            })
+            setBillingList(filteredBill)
+        } else {
+            setBillingList(data?.data)
+        }
+    }, [searchInput, allBill, data]);
 
     return (
         <>
             <div className="container mx-auto mt-6">
-                <BillingHeader setSelectedBill={setSelectedBill} setIsOpen={setIsOpen} />
+                <BillingHeader
+                    setSelectedBill={setSelectedBill}
+                    setIsOpen={setIsOpen}
+                    setSearchInput={setSearchInput}
+                />
                 <BillingBody
                     billingList={billingList}
                     isLoading={isLoading}

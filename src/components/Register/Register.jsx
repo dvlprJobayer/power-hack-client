@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const Register = ({ setToken }) => {
     const navigate = useNavigate();
     const { register, formState: { errors }, reset, handleSubmit } = useForm();
 
@@ -18,6 +18,7 @@ const Register = () => {
             })
         }).then(res => res.json()).then(token => {
             localStorage.setItem('accessToken', token);
+            setToken(token);
             navigate('/');
             reset();
         })

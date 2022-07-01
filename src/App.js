@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/Header';
 import Login from './components/Login/Login';
@@ -10,15 +11,26 @@ import Register from './components/Register/Register';
 
 
 function App() {
+    const navigate = useNavigate();
+    const [token, setToken] = useState('');
     const [allBillLength, setAllBillLength] = useState(0);
-    const { data: billingList, refetch } = useQuery('allBillingList', () => fetch(`http://localhost:5000/billing-list`).then(res =>
-        res.json()));
+    const { data: allBill, refetch, error } = useQuery(['allBillingList', token], () => axios(`http://localhost:5000/billing-list`, {
+        headers: {
+            authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+    }));
 
     useEffect(() => {
-        if (billingList) {
-            setAllBillLength(billingList.length)
+        if (error?.response?.status === 403 || error?.response?.status === 401) {
+            navigate('/login');
         }
-    }, [billingList])
+    }, [error, navigate]);
+
+    useEffect(() => {
+        if (allBill?.data) {
+            setAllBillLength(allBill?.data?.length)
+        }
+    }, [allBill])
 
     return (
         <>
@@ -26,10 +38,12 @@ function App() {
             <Routes>
                 <Route path='/' element={<Main
                     setAllBillLength={setAllBillLength}
+                    token={token}
+                    allBill={allBill}
                     refetchAll={refetch} />}
                 />
-                <Route path='/login' element={<Login />} />
-                <Route path='/register' element={<Register />} />
+                <Route path='/login' element={<Login setToken={setToken} />} />
+                <Route path='/register' element={<Register setToken={setToken} />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </>
