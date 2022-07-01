@@ -23,7 +23,7 @@ function App() {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [modalIsOpenTwo, setIsOpenTwo] = useState(false);
     const [billingList, setBillingList] = useState([]);
-    const [singleBill, setSingleBill] = useState(null);
+    const [selectedBill, setSelectedBill] = useState(null);
 
     const { data, isLoading, refetch } = useQuery('billingList', () => fetch('http://localhost:5000/billing-list').then(res =>
         res.json()));
@@ -43,7 +43,8 @@ function App() {
                     billingList={billingList}
                     isLoading={isLoading}
                     setIsOpen={setIsOpen}
-                    setSingleBill={setSingleBill}
+                    setIsOpenTwo={setIsOpenTwo}
+                    setSelectedBill={setSelectedBill}
                 />
             </div>
             <AddAndEditModal
@@ -52,15 +53,15 @@ function App() {
                 customStyles={customStyles}
                 setBillingList={setBillingList}
                 refetch={refetch}
-                singleBill={singleBill}
-                setSingleBill={setSingleBill}
+                selectedBill={selectedBill}
+                setSelectedBill={setSelectedBill}
             />
             <DeleteModal
                 customStyles={customStyles}
                 modalIsOpenTwo={modalIsOpenTwo}
                 setIsOpenTwo={setIsOpenTwo}
-                singleBill={singleBill}
-                setSingleBill={setSingleBill}
+                selectedBill={selectedBill}
+                setSelectedBill={setSelectedBill}
                 refetch={refetch}
             />
         </>

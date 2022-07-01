@@ -1,9 +1,14 @@
 import React from 'react';
 
-const BillingBody = ({ billingList, isLoading, setIsOpen, setSingleBill }) => {
+const BillingBody = ({ billingList, isLoading, setIsOpen, setIsOpenTwo, setSelectedBill }) => {
     const editModal = singleBill => {
-        setSingleBill(singleBill);
+        setSelectedBill(singleBill);
         setIsOpen(true);
+    }
+
+    const deleteModal = singleBill => {
+        setSelectedBill(singleBill);
+        setIsOpenTwo(true);
     }
 
     return (
@@ -33,7 +38,7 @@ const BillingBody = ({ billingList, isLoading, setIsOpen, setSingleBill }) => {
                                         <td><div className='flex items-center'>
                                             <button onClick={() => editModal(singleBill)}>Edit</button>
                                             <span className='w-[2px] h-4 bg-black inline-block mx-2'></span>
-                                            <button>Delete</button>
+                                            <button onClick={() => deleteModal(singleBill)}>Delete</button>
                                         </div></td>
                                     </tr>)
                                 }
