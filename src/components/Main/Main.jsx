@@ -19,7 +19,7 @@ const customStyles = {
     },
 };
 
-const Main = () => {
+const Main = ({ setAllBillLength, refetchAll }) => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [modalIsOpenTwo, setIsOpenTwo] = useState(false);
     const [billingList, setBillingList] = useState([]);
@@ -62,6 +62,8 @@ const Main = () => {
                 setBillingList={setBillingList}
                 refetch={refetch}
                 refetchTwo={refetchTwo}
+                refetchAll={refetchAll}
+                setAllBillLength={setAllBillLength}
                 selectedBill={selectedBill}
                 setSelectedBill={setSelectedBill}
             />

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 Modal.setAppElement('#root');
 
 const AddAndEditModal = (props) => {
-    const { modalIsOpen, setIsOpen, customStyles, setBillingList, refetch, selectedBill, setSelectedBill, refetchTwo } = props;
+    const { modalIsOpen, setIsOpen, customStyles, setBillingList, refetch, selectedBill, setSelectedBill, refetchTwo, refetchAll, setAllBillLength } = props;
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     function closeModal() {
@@ -41,10 +41,11 @@ const AddAndEditModal = (props) => {
             }).catch(err => {
                 reset();
                 setSelectedBill(null);
-                alert(err.message);
                 refetch();
+                alert(err.message);
             })
         } else {
+            setAllBillLength(billLength => billLength + 1);
             setBillingList(billingList => [...billingList, bill]);
             fetch('http://localhost:5000/add-billing', {
                 method: 'POST',
@@ -55,10 +56,13 @@ const AddAndEditModal = (props) => {
             }).then(res => res.json()).then(data => {
                 refetch();
                 refetchTwo();
+                refetchAll();
                 reset();
             }).catch(err => {
-                alert(err.message);
                 refetch();
+                setAllBillLength(billLength => billLength - 1);
+                alert(err.message);
+                reset();
             })
         }
     }
