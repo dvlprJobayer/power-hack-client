@@ -25,12 +25,19 @@ function App() {
     const [modalIsOpenTwo, setIsOpenTwo] = useState(false);
     const [billingList, setBillingList] = useState([]);
     const [selectedBill, setSelectedBill] = useState(null);
+    const [page, setPage] = useState(0)
 
     const handlePageClick = page => {
-        console.log(page.selected);
+        setPage(page.selected);
     }
 
-    const { data, isLoading, refetch } = useQuery('billingList', () => fetch('http://localhost:5000/billing-list').then(res =>
+    const { data, isLoading, refetch } = useQuery(['billingList', page], () => fetch(`http://localhost:5000/billing-list?page=${page}&size=10`).then(res =>
+        res.json()));
+
+    const { data: allBillingList } = useQuery('allBillingList', () => fetch(`http://localhost:5000/billing-list`).then(res =>
+        res.json()));
+
+    const { data: pageCount, refetch: refetchTwo } = useQuery('pageCount', () => fetch('http://localhost:5000/page-count').then(res =>
         res.json()));
 
     useEffect(() => {
@@ -41,7 +48,7 @@ function App() {
 
     return (
         <>
-            <Header billingList={billingList} />
+            <Header allBillingList={allBillingList} />
             <div className="container mx-auto mt-6">
                 <BillingHeader setSelectedBill={setSelectedBill} setIsOpen={setIsOpen} />
                 <BillingBody
@@ -51,7 +58,7 @@ function App() {
                     setIsOpenTwo={setIsOpenTwo}
                     setSelectedBill={setSelectedBill}
                 />
-                <Pagination handlePageClick={handlePageClick} />
+                <Pagination pageCount={pageCount} handlePageClick={handlePageClick} />
             </div>
             <AddAndEditModal
                 modalIsOpen={modalIsOpen}
@@ -59,6 +66,7 @@ function App() {
                 customStyles={customStyles}
                 setBillingList={setBillingList}
                 refetch={refetch}
+                refetchTwo={refetchTwo}
                 selectedBill={selectedBill}
                 setSelectedBill={setSelectedBill}
             />

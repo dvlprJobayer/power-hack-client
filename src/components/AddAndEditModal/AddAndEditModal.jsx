@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 Modal.setAppElement('#root');
 
 const AddAndEditModal = (props) => {
-    const { modalIsOpen, setIsOpen, customStyles, setBillingList, refetch, selectedBill, setSelectedBill } = props;
+    const { modalIsOpen, setIsOpen, customStyles, setBillingList, refetch, selectedBill, setSelectedBill, refetchTwo } = props;
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     function closeModal() {
@@ -22,6 +22,7 @@ const AddAndEditModal = (props) => {
             phone: data.phone,
             amount: data.amount
         }
+        closeModal();
         if (selectedBill) {
             setBillingList(billingList => {
                 const restBill = billingList.filter(singleBill => singleBill._id !== selectedBill._id)
@@ -37,13 +38,11 @@ const AddAndEditModal = (props) => {
                 reset();
                 setSelectedBill(null);
                 refetch();
-                closeModal();
             }).catch(err => {
                 reset();
                 setSelectedBill(null);
                 alert(err.message);
                 refetch();
-                closeModal();
             })
         } else {
             setBillingList(billingList => [...billingList, bill]);
@@ -55,12 +54,11 @@ const AddAndEditModal = (props) => {
                 body: JSON.stringify(bill)
             }).then(res => res.json()).then(data => {
                 refetch();
-                closeModal();
+                refetchTwo();
                 reset();
             }).catch(err => {
                 alert(err.message);
                 refetch();
-                closeModal();
             })
         }
     }
