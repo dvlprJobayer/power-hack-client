@@ -24,10 +24,6 @@ const AddAndEditModal = (props) => {
         }
         closeModal();
         if (selectedBill) {
-            setBillingList(billingList => {
-                const restBill = billingList.filter(singleBill => singleBill._id !== selectedBill._id)
-                return [restBill, bill];
-            });
             fetch(`https://socialist-worms-59722.herokuapp.com/update-billing/${selectedBill._id}`, {
                 method: 'PATCH',
                 headers: {
