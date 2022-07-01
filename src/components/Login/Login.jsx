@@ -7,7 +7,7 @@ const Login = ({ setToken }) => {
     const { register, formState: { errors }, reset, handleSubmit } = useForm();
 
     const onSubmit = (data) => {
-        fetch('http://localhost:5000/login', {
+        fetch('https://socialist-worms-59722.herokuapp.com/login', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'

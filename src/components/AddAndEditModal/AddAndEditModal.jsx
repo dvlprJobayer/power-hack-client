@@ -28,7 +28,7 @@ const AddAndEditModal = (props) => {
                 const restBill = billingList.filter(singleBill => singleBill._id !== selectedBill._id)
                 return [restBill, bill];
             });
-            fetch(`http://localhost:5000/update-billing/${selectedBill._id}`, {
+            fetch(`https://socialist-worms-59722.herokuapp.com/update-billing/${selectedBill._id}`, {
                 method: 'PATCH',
                 headers: {
                     'content-type': 'application/json'
@@ -47,7 +47,7 @@ const AddAndEditModal = (props) => {
         } else {
             setAllBillLength(billLength => billLength + 1);
             setBillingList(billingList => [...billingList, bill]);
-            fetch('http://localhost:5000/add-billing', {
+            fetch('https://socialist-worms-59722.herokuapp.com/add-billing', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'

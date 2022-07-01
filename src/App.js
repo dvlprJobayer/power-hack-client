@@ -13,7 +13,7 @@ import Register from './components/Register/Register';
 function App() {
     const [token, setToken] = useState('');
     const [allBillLength, setAllBillLength] = useState(0);
-    const { data: allBill, refetch } = useQuery(['allBillingList', token], () => axios(`http://localhost:5000/billing-list`, {
+    const { data: allBill, refetch } = useQuery(['allBillingList', token], () => axios(`https://socialist-worms-59722.herokuapp.com/billing-list`, {
         headers: {
             authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }

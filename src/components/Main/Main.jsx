@@ -35,14 +35,13 @@ const Main = ({ setAllBillLength, refetchAll, token, allBill }) => {
         setPage(page.selected);
     }
 
-    const { data, isLoading, refetch, error } = useQuery(['billingList', page, token], () => axios(`http://localhost:5000/billing-list?page=${page}&size=10`, {
+    const { data, isLoading, refetch, error } = useQuery(['billingList', page, token], () => axios(`https://socialist-worms-59722.herokuapp.com/billing-list?page=${page}&size=10`, {
         headers: {
             authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
     }));
 
-    const { data: pageCount, refetch: refetchTwo } = useQuery('pageCount', () => fetch('http://localhost:5000/page-count').then(res =>
-        res.json()));
+    const { data: pageCount, refetch: refetchTwo } = useQuery('pageCount', () => fetch('https://socialist-worms-59722.herokuapp.com/page-count').then(res => res.json()));
 
     useEffect(() => {
         if (data?.data) {

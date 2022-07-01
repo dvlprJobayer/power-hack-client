@@ -9,7 +9,7 @@ const DeleteModal = (props) => {
     }
 
     const deleteBill = () => {
-        fetch(`http://localhost:5000/delete-billing/${selectedBill._id}`, {
+        fetch(`https://socialist-worms-59722.herokuapp.com/delete-billing/${selectedBill._id}`, {
             method: 'DELETE'
         }).then(res => res.json()).then(data => {
             refetch();
