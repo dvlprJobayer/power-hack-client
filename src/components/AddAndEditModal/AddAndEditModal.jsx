@@ -66,7 +66,7 @@ const AddAndEditModal = (props) => {
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
-            contentLabel="Add Contact Modal"
+            contentLabel="Add And Edit Modal"
         >
             <div className="flex justify-end">
                 <FaTimesCircle onClick={closeModal} className="cursor-pointer text-xl font-semibold" />

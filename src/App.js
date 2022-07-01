@@ -4,6 +4,7 @@ import './App.css';
 import AddAndEditModal from './components/AddAndEditModal/AddAndEditModal';
 import BillingBody from './components/BillingBody/BillingBody';
 import BillingHeader from './components/BillingHeader/BillingHeader';
+import DeleteModal from './components/DeleteModal/DeleteModal';
 import Header from './components/Header/Header';
 
 
@@ -20,6 +21,7 @@ const customStyles = {
 
 function App() {
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [modalIsOpenTwo, setIsOpenTwo] = useState(false);
     const [billingList, setBillingList] = useState([]);
     const [singleBill, setSingleBill] = useState(null);
 
@@ -52,6 +54,14 @@ function App() {
                 refetch={refetch}
                 singleBill={singleBill}
                 setSingleBill={setSingleBill}
+            />
+            <DeleteModal
+                customStyles={customStyles}
+                modalIsOpenTwo={modalIsOpenTwo}
+                setIsOpenTwo={setIsOpenTwo}
+                singleBill={singleBill}
+                setSingleBill={setSingleBill}
+                refetch={refetch}
             />
         </>
     );
