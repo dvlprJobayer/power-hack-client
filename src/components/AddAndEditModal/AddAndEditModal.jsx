@@ -8,12 +8,13 @@ Modal.setAppElement('#root');
 
 const AddAndEditModal = (props) => {
     const { modalIsOpen, setIsOpen, customStyles, setBillingList, refetch, selectedBill, setSelectedBill } = props;
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
     function closeModal() {
         setIsOpen(false);
         setSelectedBill(null);
     }
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const onSubmit = data => {
         const bill = {
             name: data.name,
@@ -33,10 +34,13 @@ const AddAndEditModal = (props) => {
                 },
                 body: JSON.stringify(bill)
             }).then(res => res.json()).then(data => {
+                reset();
+                setSelectedBill(null);
                 refetch();
                 closeModal();
-                reset();
             }).catch(err => {
+                reset();
+                setSelectedBill(null);
                 alert(err.message);
                 refetch();
                 closeModal();
@@ -74,7 +78,7 @@ const AddAndEditModal = (props) => {
             <div className="w-96">
                 <h2 className='text-xl mb-2 font-semibold'>{selectedBill ? 'Update Bill' : 'Add Bill'}</h2>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <input defaultValue={selectedBill?.name} type="text" placeholder="Full Name" className="input input-bordered w-full" {...register("name", {
+                    <input type="text" placeholder="Full Name" className="input input-bordered w-full" {...register("name", {
                         required: {
                             value: true,
                             message: 'Name is Required'
@@ -83,7 +87,7 @@ const AddAndEditModal = (props) => {
                     {errors.name?.type === 'required' && <p className='text-red-500 mt-2'>{errors.name.message}</p>}
                     <div className="mb-4"></div>
 
-                    <input defaultValue={selectedBill?.email} type="email" placeholder="Email" className="input input-bordered w-full" {...register("email", {
+                    <input type="email" placeholder="Email" className="input input-bordered w-full" {...register("email", {
                         required: {
                             value: true,
                             message: 'Email is Required'
@@ -97,7 +101,7 @@ const AddAndEditModal = (props) => {
                     {errors.email?.type === 'pattern' && <p className='text-red-500 mt-1'>{errors.email.message}</p>}
                     <div className="mb-4"></div>
 
-                    <input type="number" placeholder="Phone Number" defaultValue={selectedBill?.phone} className="input input-bordered w-full" {...register("phone", {
+                    <input type="number" placeholder="Phone Number" className="input input-bordered w-full" {...register("phone", {
                         required: {
                             value: true,
                             message: 'Phone Number is Required'
@@ -116,7 +120,7 @@ const AddAndEditModal = (props) => {
                     {errors.phone?.type === 'maxLength' && <p className='text-red-500 mt-1'>{errors.phone.message}</p>}
                     <div className="mb-4"></div>
 
-                    <input defaultValue={selectedBill?.amount} type="number" placeholder="Paid Amount" className="input input-bordered w-full" {...register("amount", {
+                    <input type="number" placeholder="Paid Amount" className="input input-bordered w-full" {...register("amount", {
                         required: {
                             value: true,
                             message: 'Paid Amount is Required'

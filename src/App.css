@@ -11,3 +11,8 @@
     border-radius: 0 !important;
     font-weight: 500;
 }
+
+.active-page {
+    background-color: #000;
+    color: #fff;
+}

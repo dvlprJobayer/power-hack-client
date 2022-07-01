@@ -6,6 +6,7 @@ import BillingBody from './components/BillingBody/BillingBody';
 import BillingHeader from './components/BillingHeader/BillingHeader';
 import DeleteModal from './components/DeleteModal/DeleteModal';
 import Header from './components/Header/Header';
+import Pagination from './components/Pagination/Pagination';
 
 
 const customStyles = {
@@ -25,6 +26,10 @@ function App() {
     const [billingList, setBillingList] = useState([]);
     const [selectedBill, setSelectedBill] = useState(null);
 
+    const handlePageClick = page => {
+        console.log(page.selected);
+    }
+
     const { data, isLoading, refetch } = useQuery('billingList', () => fetch('http://localhost:5000/billing-list').then(res =>
         res.json()));
 
@@ -36,9 +41,9 @@ function App() {
 
     return (
         <>
-            <Header />
+            <Header billingList={billingList} />
             <div className="container mx-auto mt-6">
-                <BillingHeader setIsOpen={setIsOpen} />
+                <BillingHeader setSelectedBill={setSelectedBill} setIsOpen={setIsOpen} />
                 <BillingBody
                     billingList={billingList}
                     isLoading={isLoading}
@@ -46,6 +51,7 @@ function App() {
                     setIsOpenTwo={setIsOpenTwo}
                     setSelectedBill={setSelectedBill}
                 />
+                <Pagination handlePageClick={handlePageClick} />
             </div>
             <AddAndEditModal
                 modalIsOpen={modalIsOpen}
