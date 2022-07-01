@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import './App.css';
 import AddAndEditModal from './components/AddAndEditModal/AddAndEditModal';
@@ -20,9 +20,17 @@ const customStyles = {
 
 function App() {
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [billingList, setBillingList] = useState([]);
+    const [singleBill, setSingleBill] = useState(null);
 
-    const { data: billingList, isLoading, refetch } = useQuery('billingList', () => fetch('http://localhost:5000/billing-list').then(res =>
+    const { data, isLoading, refetch } = useQuery('billingList', () => fetch('http://localhost:5000/billing-list').then(res =>
         res.json()));
+
+    useEffect(() => {
+        if (data) {
+            setBillingList(data);
+        }
+    }, [data]);
 
     return (
         <>
@@ -32,14 +40,18 @@ function App() {
                 <BillingBody
                     billingList={billingList}
                     isLoading={isLoading}
+                    setIsOpen={setIsOpen}
+                    setSingleBill={setSingleBill}
                 />
             </div>
             <AddAndEditModal
                 modalIsOpen={modalIsOpen}
                 setIsOpen={setIsOpen}
                 customStyles={customStyles}
-                billingList={billingList}
+                setBillingList={setBillingList}
                 refetch={refetch}
+                singleBill={singleBill}
+                setSingleBill={setSingleBill}
             />
         </>
     );

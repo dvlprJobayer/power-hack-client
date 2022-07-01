@@ -1,6 +1,11 @@
 import React from 'react';
 
-const BillingBody = ({ billingList, isLoading }) => {
+const BillingBody = ({ billingList, isLoading, setIsOpen, setSingleBill }) => {
+    const editModal = singleBill => {
+        setSingleBill(singleBill);
+        setIsOpen(true);
+    }
+
     return (
         <>
             {
@@ -24,8 +29,12 @@ const BillingBody = ({ billingList, isLoading }) => {
                                         <td>{singleBill.name}</td>
                                         <td>{singleBill.email}</td>
                                         <td>+88 {singleBill.phone}</td>
-                                        <td>{singleBill.amount}</td>
-                                        <td><div className='flex items-center'>Edit <span className='w-[2px] h-4 bg-black inline-block mx-2'></span> Delete</div></td>
+                                        <td>{singleBill.amount}$</td>
+                                        <td><div className='flex items-center'>
+                                            <button onClick={() => editModal(singleBill)}>Edit</button>
+                                            <span className='w-[2px] h-4 bg-black inline-block mx-2'></span>
+                                            <button>Delete</button>
+                                        </div></td>
                                     </tr>)
                                 }
                             </tbody>
