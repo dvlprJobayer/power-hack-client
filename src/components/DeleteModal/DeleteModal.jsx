@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 
 const DeleteModal = (props) => {
-    const { customStyles, modalIsOpenTwo, setIsOpenTwo, selectedBill, setSelectedBill, refetch } = props;
+    const { customStyles, modalIsOpenTwo, setIsOpenTwo, selectedBill, setSelectedBill, refetch, refetchAll } = props;
     function closeModal() {
         setIsOpenTwo(false);
         setSelectedBill(null);
@@ -13,6 +13,7 @@ const DeleteModal = (props) => {
             method: 'DELETE'
         }).then(res => res.json()).then(data => {
             refetch();
+            refetchAll();
             closeModal();
         }).catch(err => {
             alert(err.message);

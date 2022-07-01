@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/Header';
 import Login from './components/Login/Login';
@@ -11,20 +11,13 @@ import Register from './components/Register/Register';
 
 
 function App() {
-    const navigate = useNavigate();
     const [token, setToken] = useState('');
     const [allBillLength, setAllBillLength] = useState(0);
-    const { data: allBill, refetch, error } = useQuery(['allBillingList', token], () => axios(`http://localhost:5000/billing-list`, {
+    const { data: allBill, refetch } = useQuery(['allBillingList', token], () => axios(`http://localhost:5000/billing-list`, {
         headers: {
             authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
     }));
-
-    useEffect(() => {
-        if (error?.response?.status === 403 || error?.response?.status === 401) {
-            navigate('/login');
-        }
-    }, [error, navigate]);
 
     useEffect(() => {
         if (allBill?.data) {

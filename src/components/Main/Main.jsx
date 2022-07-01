@@ -41,12 +41,6 @@ const Main = ({ setAllBillLength, refetchAll, token, allBill }) => {
         }
     }));
 
-    useEffect(() => {
-        if (error?.response?.status === 403 || error?.response?.status === 401) {
-            navigate('/login');
-        }
-    }, [error, navigate]);
-
     const { data: pageCount, refetch: refetchTwo } = useQuery('pageCount', () => fetch('http://localhost:5000/page-count').then(res =>
         res.json()));
 
@@ -72,6 +66,12 @@ const Main = ({ setAllBillLength, refetchAll, token, allBill }) => {
             setBillingList(data?.data)
         }
     }, [searchInput, allBill, data]);
+
+    useEffect(() => {
+        if (error?.response?.status === 403 || error?.response?.status === 401) {
+            navigate('/login');
+        }
+    }, [error, navigate]);
 
     return (
         <>
@@ -109,6 +109,7 @@ const Main = ({ setAllBillLength, refetchAll, token, allBill }) => {
                 selectedBill={selectedBill}
                 setSelectedBill={setSelectedBill}
                 refetch={refetch}
+                refetchAll={refetchAll}
             />
         </>
     );
